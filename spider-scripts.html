@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Spider Scripts</title>
+
+<style>
+:root{
+  --bg:#08090d;
+  --panel:#111319;
+  --panel2:#171a22;
+  --border:#292d38;
+  --text:#f4f5f7;
+  --muted:#9297a3;
+  --accent:#ff315d;
+  --accent2:#ff174d;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+
+header{
+  height:68px;
+  border-bottom:1px solid var(--border);
+  background:#0b0c10;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.nav{
+  max-width:1200px;
+  height:100%;
+  margin:auto;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.logo{
+  font-size:22px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.logo span{color:var(--accent)}
+
+.navlinks{
+  display:flex;
+  gap:20px;
+  color:#aeb2bb;
+}
+
+.navlinks a{cursor:pointer}
+.navlinks a:hover{color:white}
+
+.spacer{flex:1}
+
+.top-search{
+  width:220px;
+  background:#15171e;
+  border:1px solid var(--border);
+  color:white;
+  padding:9px 12px;
+  border-radius:8px;
+  outline:none;
+}
+
+.btn{
+  border:1px solid var(--border);
+  background:#171920;
+  color:white;
+  padding:9px 14px;
+  border-radius:8px;
+}
+
+.btn:hover{background:#20232d}
+
+.btn-primary{
+  background:var(--accent);
+  border-color:var(--accent);
+}
+
+.btn-primary:hover{background:var(--accent2)}
+
+.layout{
+  max-width:1200px;
+  margin:auto;
+  padding:30px 20px;
+  display:grid;
+  grid-template-columns:210px 1fr;
+  gap:30px;
+}
+
+.sidebar{
+  border-right:1px solid var(--border);
+  padding-right:20px;
+}
+
+.sidebar h4{
+  color:#666b77;
+  font-size:11px;
+  text-transform:uppercase;
+  margin:8px 0;
+}
+
+.side-btn{
+  display:block;
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#aeb2bb;
+  text-align:left;
+  padding:10px;
+  border-radius:7px;
+}
+
+.side-btn:hover{
+  background:#171920;
+  color:white;
+}
+
+.side-btn.active{
+  background:#ff315d;
+  color:white;
+}
+
+.content h1{
+  margin:0;
+  font-size:30px;
+}
+
+.subtitle{
+  color:var(--muted);
+  margin-top:7px;
+  margin-bottom:24px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:22px;
+}
+
+.stat{
+  background:var(--panel);
+  border:1px solid var(--border);
+  padding:14px;
+  border-radius:9px;
+}
+
+.stat strong{
+  display:block;
+  font-size:20px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.search{
+  width:100%;
+  background:#111319;
+  border:1px solid var(--border);
+  color:white;
+  padding:11px 13px;
+  border-radius:8px;
+  outline:none;
+}
+
+.select{
+  width:180px;
+  background:#111319;
+  border:1px solid var(--border);
+  color:white;
+  padding:11px;
+  border-radius:8px;
+}
+
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:13px;
+}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:17px;
+}
+
+.card:hover{
+  border-color:#414652;
+}
+
+.tag{
+  display:inline-block;
+  background:#1c1f27;
+  color:#bfc3cc;
+  font-size:10px;
+  padding:5px 7px;
+  border-radius:5px;
+}
+
+.card h3{
+  margin:12px 0 7px;
+  font-size:18px;
+}
+
+.description{
+  color:#9da2ad;
+  line-height:1.45;
+  min-height:42px;
+}
+
+.meta{
+  display:flex;
+  justify-content:space-between;
+  color:#747985;
+  font-size:12px;
+  margin:15px 0;
+}
+
+.rating{color:#ffd35a}
+
+.card-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.empty{
+  grid-column:1/-1;
+  text-align:center;
+  padding:60px 20px;
+  border:1px dashed var(--border);
+  border-radius:10px;
+  color:var(--muted);
+}
+
+.modal-bg{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#000c;
+  z-index:50;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal-bg.show{display:flex}
+
+.modal{
+  width:min(600px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#111319;
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:23px;
+}
+
+.modal-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.modal-header h2{margin:0}
+
+.close{
+  border:0;
+  background:none;
+  color:#999;
+  font-size:25px;
+}
+
+.field{margin:14px 0}
+
+.field label{
+  display:block;
+  color:#a3a7b1;
+  font-size:12px;
+  margin-bottom:6px;
+}
+
+.field input,
+.field textarea,
+.field select{
+  width:100%;
+  background:#0b0c11;
+  border:1px solid var(--border);
+  color:white;
+  padding:11px;
+  border-radius:7px;
+  outline:none;
+}
+
+.field textarea{
+  min-height:130px;
+  resize:vertical;
+}
+
+.switch{
+  text-align:center;
+  color:#888;
+  margin-top:14px;
+}
+
+.switch button{
+  background:none;
+  border:0;
+  color:#ff5575;
+}
+
+.detail-code{
+  background:#08090d;
+  border:1px solid var(--border);
+  padding:15px;
+  border-radius:8px;
+  overflow:auto;
+  white-space:pre-wrap;
+  max-height:400px;
+  color:#d8dbe2;
+}
+
+.profile{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+@media(max-width:850px){
+
+  .layout{grid-template-columns:1fr}
+
+  .sidebar{
+    border-right:0;
+    border-bottom:1px solid var(--border);
+    padding-right:0;
+    padding-bottom:15px;
+  }
+
+  .navlinks,.top-search{display:none}
+
+  .cards{grid-template-columns:1fr}
+}
+
+@media(max-width:550px){
+
+  .stats{grid-template-columns:repeat(2,1fr)}
+
+  .toolbar{flex-direction:column}
+
+  .select{width:100%}
+
+  .nav{gap:10px}
+
+  .logo{font-size:18px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="nav">
+
+<div class="logo">
+🕷️ Spider <span>Scripts</span>
+</div>
+
+<div class="navlinks">
+<a onclick="setFilter('all')">Scripts</a>
+<a onclick="sortBest()">Melhor avaliados</a>
+<a onclick="sortRecent()">Recentes</a>
+</div>
+
+<div class="spacer"></div>
+
+<input
+class="top-search"
+id="topSearch"
+placeholder="Pesquisar..."
+oninput="syncSearch()"
+>
+
+<span id="hello" style="color:#999"></span>
+
+<button type="button"
+class="btn"
+id="accountBtn"
+onclick="openAuth()">
+Entrar
+</button>
+
+<button type="button"
+class="btn btn-primary"
+onclick="openPublish()">
+＋ Publicar
+</button>
+
+</div>
+</header>
+
+
+<div class="layout">
+
+<aside class="sidebar" id="sidebar">
+<h4>Catálogo</h4>
+
+<button type="button" class="side-btn" onclick="sidebarAll()">Todos</button>
+<button type="button" class="side-btn" onclick="sidebarRecent()">Mais recentes</button>
+<button type="button" class="side-btn" onclick="sidebarBest()">Melhor avaliados</button>
+
+</aside>
+
+
+<main class="content">
+
+<h1>Scripts da comunidade</h1>
+
+<p class="subtitle">
+Scripts publicados pelos jogadores do Spider Scripts.
+</p>
+
+
+<div class="stats">
+
+<div class="stat">
+<strong id="statUsers">0</strong>
+<span>Usuários</span>
+</div>
+
+<div class="stat">
+<strong id="statScripts">0</strong>
+<span>Scripts</span>
+</div>
+
+<div class="stat">
+<strong id="statRatings">0</strong>
+<span>Avaliações</span>
+</div>
+
+<div class="stat">
+<strong id="statDownloads">0</strong>
+<span>Downloads</span>
+</div>
+
+</div>
+
+
+<div class="toolbar">
+
+<input
+id="search"
+class="search"
+placeholder="🔎 Pesquisar scripts, categorias ou autores..."
+oninput="render()"
+>
+
+<select
+id="sort"
+class="select"
+onchange="forcedSort=this.value; render()">
+
+<option value="recent">
+Mais recentes
+</option>
+
+<option value="downloads">
+Mais baixados
+</option>
+
+<option value="rating">
+Melhor avaliados
+</option>
+
+</select>
+
+</div>
+
+
+<section id="cards" class="cards"></section>
+
+</main>
+
+</div>
+
+
+<!-- LOGIN / CADASTRO -->
+
+<div id="authModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-header">
+
+<h2 id="authTitle">
+Criar conta
+</h2>
+
+<button class="close" onclick="closeAuth()">
+×
+</button>
+
+</div>
+
+
+<div id="usernameField" class="field">
+
+<label>
+Nome de usuário
+</label>
+
+<input
+id="username"
+maxlength="30"
+placeholder="Digite seu nome"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Senha
+</label>
+
+<input
+id="password"
+type="password"
+placeholder="Digite sua senha"
+>
+
+</div>
+
+
+<button
+id="authButton"
+class="btn btn-primary"
+onclick="submitAuth()">
+
+Criar conta
+
+</button>
+
+
+<div id="authSwitch" class="switch"></div>
+
+</div>
+</div>
+
+
+<!-- PUBLICAR -->
+
+<div id="publishModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-header">
+
+<h2>
+Publicar script
+</h2>
+
+<button class="close" onclick="closePublish()">
+×
+</button>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Título
+</label>
+
+<input
+id="scriptTitle"
+maxlength="80"
+placeholder="Nome do script"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Categoria
+</label>
+
+<select id="scriptCategory">
+
+<option>Universal</option>
+<option>Utilidade</option>
+<option>Interface</option>
+<option>Outro</option>
+
+</select>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Descrição
+</label>
+
+<textarea
+id="scriptDescription"
+placeholder="Explique o que seu script faz..."
+></textarea>
+
+</div>
+
+
+<div class="field">
+
+<label>
+Código do script
+</label>
+
+<textarea
+id="scriptCode"
+placeholder="Cole seu código aqui..."
+></textarea>
+
+</div>
+
+
+<button type="button"
+class="btn btn-primary"
+onclick="publishScript()">
+
+Publicar script
+
+</button>
+
+</div>
+</div>
+
+
+<!-- DETALHES -->
+
+<div id="detailModal" class="modal-bg">
+
+<div class="modal">
+
+<div class="modal-header">
+
+<h2 id="detailTitle">
+Script
+</h2>
+
+<button class="close" onclick="closeDetail()">
+×
+</button>
+
+</div>
+
+<div id="detailContent"></div>
+
+</div>
+</div>
+
+
+<script>
+
+/* =========================================
+   DADOS
+========================================= */
+
+function safeRead(key, fallback){
+  try{
+    const value = localStorage.getItem(key);
+    return value ? JSON.parse(value) : fallback;
+  }catch(e){
+    localStorage.removeItem(key);
+    return fallback;
+  }
+}
+
+let user = safeRead("spider_user", null);
+let scripts = safeRead("spider_scripts", []);
+let ratings = safeRead("spider_ratings", {});
+
+if(!Array.isArray(scripts)) scripts = [];
+if(!ratings || typeof ratings !== "object") ratings = {};
+
+let authMode = "register";
+let category = "all";
+let forcedSort = "recent";
+
+
+/* =========================================
+   SALVAR
+========================================= */
+
+function saveScripts(){
+
+localStorage.setItem(
+"spider_scripts",
+JSON.stringify(scripts)
+);
+
+}
+
+function saveUsers(users){
+
+localStorage.setItem(
+"spider_users",
+JSON.stringify(users)
+);
+
+}
+
+function saveRatings(){
+
+localStorage.setItem(
+"spider_ratings",
+JSON.stringify(ratings)
+);
+
+}
+
+
+/* =========================================
+   AUTENTICAÇÃO
+========================================= */
+
+function openAuth(mode="register"){
+
+authMode = mode;
+
+updateAuthModal();
+
+document
+.getElementById("authModal")
+.classList.add("show");
+
+}
+
+function closeAuth(){
+
+document
+.getElementById("authModal")
+.classList.remove("show");
+
+}
+
+function updateAuthModal(){
+
+const title =
+document.getElementById("authTitle");
+
+const button =
+document.getElementById("authButton");
+
+const username =
+document.getElementById("usernameField");
+
+const switchBox =
+document.getElementById("authSwitch");
+
+
+if(authMode === "login"){
+
+title.textContent = "Entrar";
+
+button.textContent = "Entrar";
+
+username.style.display = "block";
+
+switchBox.innerHTML =
+`Não tem conta?
+<button onclick="openAuth('register')">
+Criar conta
+</button>`;
+
+}else{
+
+title.textContent = "Criar conta";
+
+button.textContent = "Criar conta";
+
+username.style.display = "block";
+
+switchBox.innerHTML =
+`Já tem conta?
+<button onclick="openAuth('login')">
+Entrar
+</button>`;
+
+}
+
+}
+
+
+/* =========================================
+   CRIAR / ENTRAR
+========================================= */
+
+function submitAuth(){
+
+const password =
+document.getElementById("password")
+.value;
+
+if(authMode === "register"){
+
+const username =
+document.getElementById("username")
+.value
+.trim();
+
+
+if(!username){
+
+alert("Digite um nome de usuário.");
+
+return;
+
+}
+
+if(username.length < 3){
+
+alert(
+"O nome precisa ter pelo menos 3 caracteres."
+);
+
+return;
+
+}
+
+if(password.length < 6){
+
+alert(
+"A senha precisa ter pelo menos 6 caracteres."
+);
+
+return;
+
+}
+
+
+let users =
+JSON.parse(
+localStorage.getItem("spider_users") || "[]"
+);
+
+
+if(
+users.some(
+u =>
+u.username.toLowerCase()
+===
+username.toLowerCase()
+)
+){
+
+alert(
+"Esse nome de usuário já existe."
+);
+
+return;
+
+}
+
+
+const newUser = {
+
+id:Date.now().toString(),
+
+username:username,
+
+password:password
+
+};
+
+
+users.push(newUser);
+
+saveUsers(users);
+
+
+user = {
+
+id:newUser.id,
+
+username:newUser.username
+
+};
+
+
+localStorage.setItem(
+"spider_user",
+JSON.stringify(user)
+);
+
+
+closeAuth();
+
+updateUser();
+
+updateStats();
+
+alert(
+"Conta criada com sucesso!"
+);
+
+return;
+
+}
+
+
+/* LOGIN */
+
+const loginName =
+document.getElementById("username")
+.value
+.trim();
+
+if(!loginName){
+
+alert("Digite seu nome de usuário.");
+
+return;
+
+}
+
+
+let users =
+JSON.parse(
+localStorage.getItem("spider_users") || "[]"
+);
+
+
+const found =
+users.find(
+u =>
+u.username.toLowerCase()
+===
+loginName.toLowerCase()
+&&
+u.password === password
+);
+
+
+if(!found){
+
+alert(
+"Nome de usuário ou senha incorretos."
+);
+
+return;
+
+}
+
+
+user = {
+
+id:found.id,
+
+username:found.username
+
+};
+
+
+localStorage.setItem(
+"spider_user",
+JSON.stringify(user)
+);
+
+
+closeAuth();
+
+updateUser();
+
+alert(
+"Login realizado com sucesso!"
+);
+
+}
+
+
+/* =========================================
+   USUÁRIO
+========================================= */
+
+function updateUser(){
+
+const hello =
+document.getElementById("hello");
+
+const button =
+document.getElementById("accountBtn");
+
+
+if(user){
+
+hello.textContent =
+"Olá, " + user.username;
+
+button.textContent = "Sair";
+
+button.onclick = logout;
+
+}else{
+
+hello.textContent = "";
+
+button.textContent = "Entrar";
+
+button.onclick = () => openAuth("login");
+
+}
+
+}
+
+
+function logout(){
+
+user = null;
+
+localStorage.removeItem("spider_user");
+
+updateUser();
+
+}
+
+
+/* =========================================
+   PUBLICAR
+========================================= */
+
+function openPublish(){
+
+if(!user){
+
+alert(
+"Crie uma conta ou entre para publicar."
+);
+
+openAuth("register");
+
+return;
+
+}
+
+document
+.getElementById("publishModal")
+.classList.add("show");
+
+}
+
+
+function closePublish(){
+
+document
+.getElementById("publishModal")
+.classList.remove("show");
+
+}
+
+
+function publishScript(){
+
+if(!user){
+
+openAuth("login");
+
+return;
+
+}
+
+
+const title =
+document.getElementById("scriptTitle")
+.value
+.trim();
+
+const scriptCategory =
+document.getElementById("scriptCategory")
+.value;
+
+const description =
+document.getElementById("scriptDescription")
+.value
+.trim();
+
+const code =
+document.getElementById("scriptCode")
+.value;
+
+
+if(!title || !description || !code){
+
+alert(
+"Preencha todos os campos."
+);
+
+return;
+
+}
+
+
+const script = {
+
+id:Date.now().toString(),
+
+title:title,
+
+category:scriptCategory,
+
+description:description,
+
+code:code,
+
+author:user.username,
+
+authorId:user.id,
+
+rating:0,
+
+ratingCount:0,
+
+downloads:0,
+
+createdAt:new Date().toISOString()
+
+};
+
+
+scripts.unshift(script);
+
+saveScripts();
+
+
+document.getElementById("scriptTitle").value="";
+document.getElementById("scriptDescription").value="";
+document.getElementById("scriptCode").value="";
+
+
+closePublish();
+
+render();
+
+updateStats();
+
+
+alert(
+"Script publicado com sucesso!"
+);
+
+}
+
+
+/* =========================================
+   FILTROS DO MENU LATERAL
+========================================= */
+
+function sidebarAll(){
+  category = "all";
+  forcedSort = "recent";
+  render();
+  updateSidebarState();
+}
+
+function sidebarRecent(){
+  category = "all";
+  forcedSort = "recent";
+  render();
+  updateSidebarState();
+}
+
+function sidebarBest(){
+  category = "all";
+  forcedSort = "rating";
+  render();
+  updateSidebarState();
+}
+
+function sidebarCategory(value){
+  category = value || "all";
+  forcedSort = "recent";
+  render();
+  updateSidebarState();
+}
+
+function setCategory(value){ category = "all"; render(); }
+
+function setFilter(value){
+  if(value === "all") sidebarAll();
+  else if(value === "recent") sidebarRecent();
+  else if(value === "rating") sidebarBest();
+  else {
+    category = "all";
+    forcedSort = value;
+    render();
+    updateSidebarState();
+  }
+}
+
+function sortRecent(){
+  sidebarRecent();
+}
+
+function sortBest(){
+  sidebarBest();
+}
+
+function updateSidebarState(){
+  const sidebar = document.getElementById("sidebar");
+  if(!sidebar) return;
+
+  sidebar.querySelectorAll(".side-btn").forEach(function(btn){
+    btn.classList.remove("active");
+  });
+
+  if(category !== "all"){
+    const catBtn = Array.from(
+      sidebar.querySelectorAll("[data-category]")
+    ).find(btn => btn.dataset.category === category);
+    if(catBtn) catBtn.classList.add("active");
+    return;
+  }
+
+  const action =
+    forcedSort === "rating"
+      ? "rating"
+      : "recent";
+
+  const actionBtn = Array.from(
+    sidebar.querySelectorAll("[data-action]")
+  ).find(btn => btn.dataset.action === action);
+
+  if(actionBtn) actionBtn.classList.add("active");
+}
+
+function deleteScript(id){
+  if(!user){
+    alert("Entre na sua conta para excluir um script.");
+    return;
+  }
+
+  const index = scripts.findIndex(script => String(script.id) === String(id));
+
+  if(index === -1){
+    alert("Script não encontrado.");
+    return;
+  }
+
+  const script = scripts[index];
+
+  if(String(script.authorId) !== String(user.id)){
+    alert("Você só pode excluir scripts que pertencem à sua conta.");
+    return;
+  }
+
+  if(!confirm(`Tem certeza que deseja excluir "${script.title}"?`)){
+    return;
+  }
+
+  scripts.splice(index, 1);
+  saveScripts();
+  render();
+  updateStats();
+}
+
+/* =========================================
+   PESQUISA
+========================================= */
+
+function syncSearch(){
+
+document.getElementById("search").value =
+document.getElementById("topSearch").value;
+
+render();
+
+}
+
+
+/* =========================================
+   RENDER
+========================================= */
+
+function render(){
+  const searchEl = document.getElementById("search");
+  const cards = document.getElementById("cards");
+  const sortEl = document.getElementById("sort");
+
+  if(!searchEl || !cards) return;
+
+  const search = searchEl.value.toLowerCase().trim();
+  const sort = forcedSort || (sortEl ? sortEl.value : "recent");
+
+  let list = scripts.filter(script => {
+    if(!script || typeof script !== "object") return false;
+    const categoryOK = category === "all" || String(script.category || "") === category;
+    const text = `${script.title || ""} ${script.description || ""} ${script.author || ""} ${script.category || ""}`.toLowerCase();
+    return categoryOK && text.includes(search);
+  });
+
+  if(sort === "recent"){
+    list.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+  } else if(sort === "downloads"){
+    list.sort((a,b) => (b.downloads || 0) - (a.downloads || 0));
+  } else if(sort === "rating"){
+    list.sort((a,b) => (b.rating || 0) - (a.rating || 0));
+  }
+
+  if(sortEl && ["recent","downloads","rating"].includes(sort)){
+    sortEl.value = sort;
+  }
+
+  if(list.length === 0){
+    cards.innerHTML = `
+      <div class="empty">
+        <h3>Nenhum script encontrado</h3>
+        <p>Não existem scripts nessa seleção.</p>
+        <button class="btn btn-primary" onclick="openPublish()">
+          ＋ Publicar script
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  cards.innerHTML = list.map(createCard).join("");
+}
+
+/* =========================================
+   CARD
+========================================= */
+
+function createCard(script){
+
+const rating =
+script.ratingCount
+?
+script.rating.toFixed(1)
+:
+"0.0";
+
+
+return `
+
+<article class="card">
+
+<span class="tag">
+${escapeHTML(script.category)}
+</span>
+
+<h3>
+${escapeHTML(script.title)}
+</h3>
+
+<div class="description">
+${escapeHTML(script.description)}
+</div>
+
+<div class="meta">
+
+<span>
+👤 ${escapeHTML(script.author)}
+</span>
+
+<span class="rating">
+★ ${rating}
+(${script.ratingCount})
+</span>
+
+</div>
+
+<div class="meta">
+
+<span>
+↓ ${script.downloads} downloads
+</span>
+
+<span>
+${formatDate(script.createdAt)}
+</span>
+
+</div>
+
+<div class="card-actions">
+
+<button type="button"
+class="btn"
+onclick="openDetails('${script.id}')">
+
+Ver
+
+</button>
+
+<button type="button"
+class="btn"
+onclick="rateScript('${script.id}')">
+
+⭐ Avaliar
+
+</button>
+
+<button type="button"
+class="btn btn-primary"
+onclick="downloadScript('${script.id}')">
+
+📥 Baixar
+
+</button>
+
+${user && script.authorId === user.id ? `
+<button type="button"
+class="btn"
+onclick="deleteScript('${script.id}')">
+
+🗑️ Excluir
+
+</button>
+` : ""}
+
+</div>
+
+</article>
+
+`;
+
+}
+
+
+/* =========================================
+   DETALHES
+========================================= */
+
+function openDetails(id){
+
+const script =
+scripts.find(
+x => x.id === id
+);
+
+if(!script)return;
+
+
+document.getElementById("detailTitle")
+.textContent =
+script.title;
+
+
+document.getElementById("detailContent")
+.innerHTML = `
+
+<p style="color:#999">
+Publicado por
+<b>
+${escapeHTML(script.author)}
+</b>
+</p>
+
+<p>
+${escapeHTML(script.description)}
+</p>
+
+<p style="color:#888">
+Categoria:
+${escapeHTML(script.category)}
+</p>
+
+<p style="color:#888">
+⭐ ${script.rating.toFixed(1)}
+(${script.ratingCount} avaliações)
+</p>
+
+<h3>Código</h3>
+
+<pre class="detail-code">${escapeHTML(script.code)}</pre>
+
+<br>
+
+<button type="button"
+class="btn btn-primary"
+onclick="downloadScript('${script.id}')">
+
+📥 Baixar script
+
+</button>
+
+`;
+
+document
+.getElementById("detailModal")
+.classList.add("show");
+
+}
+
+
+function closeDetail(){
+
+document
+.getElementById("detailModal")
+.classList.remove("show");
+
+}
+
+
+/* =========================================
+   DOWNLOAD
+========================================= */
+
+function downloadScript(id){
+
+const script =
+scripts.find(
+x => x.id === id
+);
+
+if(!script)return;
+
+
+script.downloads++;
+
+saveScripts();
+
+
+const blob =
+new Blob(
+[script.code],
+{type:"text/plain"}
+);
+
+
+const url =
+URL.createObjectURL(blob);
+
+
+const a =
+document.createElement("a");
+
+a.href = url;
+
+a.download =
+script.title
+.replace(/[^a-z0-9-_]/gi,"_")
++
+".txt";
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
+
+URL.revokeObjectURL(url);
+
+
+render();
+
+updateStats();
+
+}
+
+
+/* =========================================
+   AVALIAÇÃO
+========================================= */
+
+function rateScript(id){
+
+if(!user){
+
+alert(
+"Você precisa entrar para avaliar."
+);
+
+openAuth("login");
+
+return;
+
+}
+
+
+const script =
+scripts.find(
+x => x.id === id
+);
+
+if(!script)return;
+
+
+const value =
+Number(
+prompt("Digite uma nota de 1 a 5:")
+);
+
+
+if(
+!Number.isInteger(value)
+||
+value < 1
+||
+value > 5
+){
+
+alert(
+"Digite uma nota entre 1 e 5."
+);
+
+return;
+
+}
+
+
+const key =
+user.id + "_" + id;
+
+
+if(ratings[key]){
+
+alert(
+"Você já avaliou este script."
+);
+
+return;
+
+}
+
+
+const oldTotal =
+script.rating *
+script.ratingCount;
+
+
+script.ratingCount++;
+
+script.rating =
+(
+oldTotal + value
+)
+/
+script.ratingCount;
+
+
+ratings[key] = true;
+
+
+saveScripts();
+
+saveRatings();
+
+render();
+
+updateStats();
+
+}
+
+
+/* =========================================
+   ESTATÍSTICAS
+========================================= */
+
+function updateStats(){
+
+const users =
+JSON.parse(
+localStorage.getItem("spider_users") || "[]"
+);
+
+
+const totalRatings =
+scripts.reduce(
+(sum,x) =>
+sum + x.ratingCount,
+0
+);
+
+
+const totalDownloads =
+scripts.reduce(
+(sum,x) =>
+sum + x.downloads,
+0
+);
+
+
+document.getElementById("statUsers")
+.textContent =
+users.length.toLocaleString("pt-BR");
+
+
+document.getElementById("statScripts")
+.textContent =
+scripts.length.toLocaleString("pt-BR");
+
+
+document.getElementById("statRatings")
+.textContent =
+totalRatings.toLocaleString("pt-BR");
+
+
+document.getElementById("statDownloads")
+.textContent =
+totalDownloads.toLocaleString("pt-BR");
+
+}
+
+
+/* =========================================
+   UTILIDADES
+========================================= */
+
+function formatDate(date){
+
+return new Date(date)
+.toLocaleDateString("pt-BR");
+
+}
+
+
+function escapeHTML(text){
+
+return String(text)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================================
+   INICIAR
+========================================= */
+
+updateUser();
+
+updateStats();
+
+render();
+
+</script>
+
+</body>
+</html>
